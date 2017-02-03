@@ -1,6 +1,8 @@
 ## adambene/react-native-android
-
 For building ReactNative APKs. Latest Java + Node.js + Android SDK.
+
+## GitHub
+[github.com/adambene/react-native-android](https://github.com/adambene/react-native-android)
 
 ## Example
 
