@@ -7,7 +7,7 @@ For building ReactNative APKs. Latest Java + Node.js + Android SDK.
 ### package.json
 ```json
   "scripts": {
-    "build-with-docker": "docker run -t -i -v $(pwd):/workspace -v ~/.gradle/:/root/.gradle/ -w /workspace medicall /bin/sh -c \"cd android && ./gradlew --stacktrace assembleRelease\""
+    "build-with-docker": "docker run -t -i -v $(pwd):/workspace -v ~/.gradle/:/root/.gradle/ -w /workspace adambene/react-native-android /bin/sh -c \"cd android && ./gradlew --stacktrace assembleRelease\""
   },
 ```
 
