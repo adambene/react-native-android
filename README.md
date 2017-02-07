@@ -4,30 +4,51 @@ Docker image for building ReactNative APKs. Latest Java + Node.js + Android SDK.
 ## GitHub
 [github.com/adambene/react-native-android](https://github.com/adambene/react-native-android)
 
+## DockerHub
+[hub.docker.com/r/adambene/react-native-android](https://hub.docker.com/r/adambene/react-native-android/)
+
 ## Example
 
-### package.json
+### Command Line
+Build a React Native project for Android from the command line.
+
+```bash
+cd my-project/
+
+docker run -t -i \
+  -v $(pwd):/workspace \
+  -v ~/.gradle/:/home/user/.gradle/ \
+  -w /workspace \
+  -e LOCAL_USER_ID=`id -u $USER` \
+  adambene/react-native-android \
+  /bin/sh -c "cd android && ./gradlew --stacktrace assembleRelease"
+```
+
+### package.json & npm
+Build a React Native project for Android with `npm`.
+
 ```json
   "scripts": {
-    "build-with-docker-debug": "docker run -t -i -v $(pwd):/workspace -v ~/.gradle/:/root/.gradle/ -w /workspace adambene/react-native-android /bin/sh -c \"cd android && ./gradlew --stacktrace assembleRelease\"",
-    "build-with-docker-release": "docker run -t -i -v $(pwd):/workspace -v ~/.gradle/:/root/.gradle/ -w /workspace adambene/react-native-android /bin/sh -c \"cd android && ./gradlew --stacktrace assembleRelease\""
+    "build-with-docker-debug": "docker run -t -i -v $(pwd):/workspace -v ~/.gradle/:/home/user/.gradle/ -w /workspace -e LOCAL_USER_ID=`id -u $USER` adambene/react-native-android /bin/sh -c \"cd android && ./gradlew --stacktrace assembleDebug\"",
+    "build-with-docker-release": "docker run -t -i -v $(pwd):/workspace -v ~/.gradle/:/home/user/.gradle/ -w /workspace -e LOCAL_USER_ID=`id -u $USER` adambene/react-native-android /bin/sh -c \"cd android && ./gradlew --stacktrace assembleRelease\""
   },
 ```
 
-### Command Line
 ```bash
 npm run build-with-docker-debug
 npm run build-with-docker-release
 ```
 
+## More
+The container runs the command with username `user` and user id `LOCAL_USER_ID`. This is important to avoid permission problems. The built files are owned by `user` not the root.
+
 ### Volumes
-Projects directory as workspace and host's .gradle directory.
+Projects directory as workspace and host's `~/.gradle/` directory is needed.
 
 ### APK
-APK is built into the usual build directory.
+Debug and release APK are built into the usual build directory `android/app/build/outputs/apk/`.
 
 ### Customizations
-
 You can override the following defaults either in your Dockerfile or command line using `-e`.
 
 ```bash

@@ -2,6 +2,19 @@ FROM openjdk:8
 
 MAINTAINER ADAM Bene <adambene@adambene.com>
 
+# add a non-root user
+
+RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
+RUN curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/1.4/gosu-$(dpkg --print-architecture)" \
+    && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/1.4/gosu-$(dpkg --print-architecture).asc" \
+    && gpg --verify /usr/local/bin/gosu.asc \
+    && rm /usr/local/bin/gosu.asc \
+    && chmod +x /usr/local/bin/gosu
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
 # install Node JS (https://github.com/nodejs/docker-node/blob/90d5e3df903b830d039d3fe8f30e3a62395db37e/7.5/Dockerfile)
 
 RUN groupadd --gid 1000 node \
@@ -70,10 +83,3 @@ RUN echo y | android update sdk --no-ui --all --filter "${ANDROID_COMPONENTS}" ;
 ENV TERM dumb
 
 # END install Android SDK
-
-# attach gradle settings (gradle.properties, keystore data etc.)
-
-RUN mkdir -p /root/.gradle
-ENV HOME /root
-# declare shared volume path
-VOLUME /root/.gradle
